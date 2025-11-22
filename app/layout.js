@@ -6,13 +6,21 @@ import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// ✅ ONE metadata export with EVERYTHING combined
 export const metadata = {
   title: 'BIT Past Questions Nepal - Purbanchal University (PU) Previous Year Questions',
   description: 'Access comprehensive BIT (Bachelor of Information Technology) past questions, previous year question papers from Purbanchal University (PU), Purwanchal University Nepal. Download semester-wise exam papers, project ideas, and important topics for BIT students.',
   keywords: 'BIT past questions, BIT previous questions, Purbanchal University, PU past questions, Purwanchal University, BIT Nepal, BIT exam papers, BIT question bank, BIT semester papers, BIT old questions, Bachelor of Information Technology Nepal, PU BIT questions',
+  
+  // ✅ Google verification - ONLY the content value (no HTML tags)
+  verification: {
+    google: 'yc5Kt9gcHQ9teCn2Ol4qyxr3nizW1m8nW0tUf5Rxrnw',
+  },
+  
   openGraph: {
     title: 'BIT Past Questions Nepal - PU Previous Year Papers',
     description: 'Complete collection of BIT past questions from Purbanchal University',
+    url: 'https://bitwebsitee.vercel.app',
     type: 'website',
   },
 };
@@ -21,9 +29,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <meta name="keywords" content="BIT past questions, BIT previous questions, Purbanchal University, PU past questions, Purwanchal University, BIT Nepal, BIT exam papers, BIT question bank, BIT semester papers, BIT old questions" />
         <meta name="author" content="BIT Past Questions Nepal" />
-        <link rel="canonical" href="https://your-domain.com" />
+        <link rel="canonical" href="https://bitwebsitee.vercel.app" />
       </head>
       <body className={inter.className}>
         <Navbar />
