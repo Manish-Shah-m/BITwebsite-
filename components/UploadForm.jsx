@@ -21,7 +21,6 @@ export default function UploadForm() {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
-      // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
@@ -47,7 +46,6 @@ export default function UploadForm() {
     const loadingToast = toast.loading('Uploading question...');
 
     try {
-      // Upload image to Firebase Storage
       const timestamp = Date.now();
       const fileName = `${timestamp}_${file.name}`;
       const storageRef = ref(storage, `pastQuestions/${fileName}`);
@@ -55,7 +53,6 @@ export default function UploadForm() {
       await uploadBytes(storageRef, file);
       const imageUrl = await getDownloadURL(storageRef);
 
-      // Save metadata to Firestore
       await addDoc(collection(db, 'pastQuestions'), {
         semester: parseInt(formData.semester),
         subject: formData.subject,
@@ -67,7 +64,6 @@ export default function UploadForm() {
 
       toast.success('Question uploaded successfully!', { id: loadingToast });
       
-      // Reset form
       setFormData({
         semester: '1',
         subject: '',
@@ -91,7 +87,7 @@ export default function UploadForm() {
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Upload Past Question</h2>
       
       <div className="space-y-6">
-        {/* Semester */}
+        {/* Semester - ALL 8 SEMESTERS */}
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
             Semester <span className="text-red-600">*</span>
@@ -102,10 +98,13 @@ export default function UploadForm() {
             className="input"
             required
           >
-            {[1, 2, 3, 4].map((sem) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
               <option key={sem} value={sem}>Semester {sem}</option>
             ))}
           </select>
+          <p className="mt-1 text-xs text-gray-500">
+            Now supports all 8 semesters
+          </p>
         </div>
 
         {/* Subject */}
@@ -124,6 +123,9 @@ export default function UploadForm() {
               <option key={subject} value={subject}>{subject}</option>
             ))}
           </select>
+          <p className="mt-1 text-xs text-gray-500">
+            {availableSubjects.length} subjects available for Semester {formData.semester}
+          </p>
         </div>
 
         {/* Year */}
@@ -157,12 +159,12 @@ export default function UploadForm() {
             />
             <label
               htmlFor="file-upload"
-              className="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 bg-gray-50 hover:bg-gray-100 transition-colors"
+              className="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-400 bg-gray-50 hover:bg-gray-100 transition-colors"
             >
               {preview ? (
                 <div className="w-full">
                   <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-lg shadow-sm mb-4" />
-                  <p className="text-sm text-gray-600 text-center">{file.name}</p>
+                  <p className="text-sm text-gray-600 text-center font-medium">{file.name}</p>
                 </div>
               ) : (
                 <div className="text-center">
