@@ -10,6 +10,8 @@ const nextConfig = {
     ],
   },
   // Remove experimental.serverActions - not needed in Next.js 16
+    output: 'standalone',
+
 }
 
 module.exports = nextConfig
