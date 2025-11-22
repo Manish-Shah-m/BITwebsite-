@@ -1,8 +1,10 @@
-// app/semester/page.js   ← MUST be a Server Component → NO 'use client' here!!
-
+// app/semester/page.js
 import { Suspense } from 'react';
 import SemesterContent from './SemesterContent';
 import LoadingSpinner from '@/components/LoadingSpinner';
+
+// Force dynamic rendering - prevents build-time prerendering
+export const dynamic = 'force-dynamic';
 
 export default function SemesterPage() {
   return (
