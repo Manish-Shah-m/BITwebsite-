@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -10,7 +11,8 @@ import SemesterFilter from '../../components/SemesterFilter';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { BookOpen } from 'lucide-react';
 
-export default function SemesterPage() {
+// Separate component that uses useSearchParams
+function SemesterContent() {
   const searchParams = useSearchParams();
   const [selectedSemester, setSelectedSemester] = useState('all');
   const [questions, setQuestions] = useState([]);
@@ -93,5 +95,14 @@ export default function SemesterPage() {
         )}
       </div>
     </div>
+  );
+}
+
+// Main page component with Suspense wrapper
+export default function SemesterPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <SemesterContent />
+    </Suspense>
   );
 }
