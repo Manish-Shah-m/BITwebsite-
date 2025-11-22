@@ -3,6 +3,7 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Toaster } from 'react-hot-toast';
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,13 +23,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* Google Verification - Added directly */}
         <meta name="google-site-verification" content="yc5Kt9gcHQ9teCn2Ol4qyxr3nizW1m8nW0tUf5Rxrnw" />
-        
         <meta name="author" content="BIT Past Questions Nepal" />
         <link rel="canonical" href="https://bitwebsitee.vercel.app" />
       </head>
       <body className={inter.className}>
+        {/* Add verification as dangerouslySetInnerHTML to ensure it renders */}
+        <div dangerouslySetInnerHTML={{
+          __html: `<meta name="google-site-verification" content="yc5Kt9gcHQ9teCn2Ol4qyxr3nizW1m8nW0tUf5Rxrnw" />`
+        }} style={{ display: 'none' }} />
+        
         <Navbar />
         <main className="min-h-screen pt-20 bg-white">
           {children}

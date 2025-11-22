@@ -1,6 +1,12 @@
 import Link from 'next/link';
 import { SEMESTERS } from '@/lib/utils';
 
+
+export const metadata = {
+  verification: {
+    google: 'yc5Kt9gcHQ9teCn2Ol4qyxr3nizW1m8nW0tUf5Rxrnw',
+  },
+};
 export default function HomePage() {
   return (
     <div className="min-h-screen">
