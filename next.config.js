@@ -9,9 +9,7 @@ const nextConfig = {
       },
     ],
   },
-  // Remove experimental.serverActions - not needed in Next.js 16
-    output: 'standalone',
-
+  // Removed output: 'standalone' - not needed for Vercel
 }
 
 module.exports = nextConfig
