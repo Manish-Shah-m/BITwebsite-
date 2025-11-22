@@ -1,4 +1,6 @@
 // app/semester/page.js
+"use client"; // ← VERY IMPORTANT 🚀
+
 import { Suspense } from 'react';
 import SemesterContent from './SemesterContent';
 import LoadingSpinner from '@/components/LoadingSpinner';

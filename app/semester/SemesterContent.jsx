@@ -12,7 +12,7 @@ import { BookOpen } from 'lucide-react';
 
 export default function SemesterContent() {
   const searchParams = useSearchParams();
-  const [selectedSemester, setSelectedSemester] = useState('all');
+  const [selectedSemester, setSelectedSemester] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +29,8 @@ export default function SemesterContent() {
     setLoading(true);
     try {
       let q;
-      if (selectedSemester === 'all') {
+
+      if (selectedSemester === 0) {
         q = query(collection(db, 'pastQuestions'), orderBy('createdAt', 'desc'));
       } else {
         q = query(
