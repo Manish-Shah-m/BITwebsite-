@@ -76,7 +76,7 @@ export default function HeroSection() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-6 hero-text">
-              <Link href="/semester" className="btn-primary w-full sm:w-auto group">
+              <Link href='/semester' className="btn-primary w-full sm:w-auto group">
                 <span className="flex items-center justify-center gap-3">
                   Browse Questions
                   <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
