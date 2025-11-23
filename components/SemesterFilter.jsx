@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Filter } from 'lucide-react';
 
 export default function SemesterFilter({ selectedSemester, onSemesterChange }) {
-  const semesters = [1, 2, 3, 4];
+  const semesters = [1, 2, 3, 4, 5, 6, 7, 8];
 
   return (
     <motion.div

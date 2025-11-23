@@ -4,12 +4,12 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'firebasestorage.googleapis.com',
-        pathname: '/**',
+        hostname: 'sjzbajnphvlqbpxdenfy.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
       },
     ],
   },
-  // Removed output: 'standalone' - not needed for Vercel
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

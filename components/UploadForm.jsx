@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc } from 'firebase/firestore';
-import { storage, db } from '@/firebase/config';
+import { supabase } from '@/lib/supabase/config';
 import toast from 'react-hot-toast';
 import { SUBJECTS } from '@/lib/utils';
 
@@ -46,24 +44,55 @@ export default function UploadForm() {
     const loadingToast = toast.loading('Uploading question...');
 
     try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('You must be logged in to upload');
+      }
+
+      // Upload to Supabase Storage
       const timestamp = Date.now();
       const fileName = `${timestamp}_${file.name}`;
-      const storageRef = ref(storage, `pastQuestions/${fileName}`);
-      
-      await uploadBytes(storageRef, file);
-      const imageUrl = await getDownloadURL(storageRef);
+      const filePath = `${fileName}`; // Simple path without subfolder
 
-      await addDoc(collection(db, 'pastQuestions'), {
-        semester: parseInt(formData.semester),
-        subject: formData.subject,
-        year: formData.year,
-        imageUrl,
-        fileName,
-        uploadedAt: new Date().toISOString(),
-      });
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('pastQuestions') // ✅ Changed to pastQuestions
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('pastQuestions') // ✅ Changed to pastQuestions
+        .getPublicUrl(filePath);
+
+      // Insert into database
+      const { error: dbError } = await supabase
+        .from('past_questions')
+        .insert({
+          semester: parseInt(formData.semester),
+          subject: formData.subject,
+          year: formData.year,
+          image_url: publicUrl,
+          file_name: fileName,
+          user_id: user.id
+        });
+
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw dbError;
+      }
 
       toast.success('Question uploaded successfully!', { id: loadingToast });
       
+      // Reset form
       setFormData({
         semester: '1',
         subject: '',
@@ -74,7 +103,7 @@ export default function UploadForm() {
       e.target.reset();
     } catch (error) {
       console.error('Error uploading:', error);
-      toast.error('Failed to upload question', { id: loadingToast });
+      toast.error(error.message || 'Failed to upload question', { id: loadingToast });
     } finally {
       setUploading(false);
     }

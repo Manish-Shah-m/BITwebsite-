@@ -15,10 +15,10 @@ export default function QuestionCard({ question }) {
         {/* Image */}
         <div className="relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden mb-4">
           <Image
-            src={question.imageUrl}
+            src={question.image_url} // Changed from imageUrl to image_url
             alt={`${question.subject} - ${question.year}`}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-contain group-hover:scale-105 transition-transform duration-300"
           />
         </div>
 
@@ -47,11 +47,11 @@ export default function QuestionCard({ question }) {
           
           <div className="relative max-w-5xl max-h-[90vh] w-full">
             <Image
-              src={question.imageUrl}
+              src={question.image_url} // Changed from imageUrl to image_url
               alt={`${question.subject} - ${question.year}`}
               width={1200}
               height={1600}
-              className="w-full h-auto object-contain"
+              className="w-auto h-auto object-contain"
             />
           </div>
         </div>

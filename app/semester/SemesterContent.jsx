@@ -1,14 +1,11 @@
-'use client';   // MOST IMPORTANT LINE — FIXES THE ERROR
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import { supabase } from '../../lib/supabase/config';
 import QuestionCard from '../../components/QuestionCard';
 import SemesterFilter from '../../components/SemesterFilter';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { BookOpen } from 'lucide-react';
 
 export default function SemesterContent() {
   const searchParams = useSearchParams();
@@ -28,67 +25,84 @@ export default function SemesterContent() {
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      let q;
+      let query = supabase
+        .from('past_questions')
+        .select('*');
 
-      if (selectedSemester === 0) {
-        q = query(collection(db, 'pastQuestions'), orderBy('createdAt', 'desc'));
-      } else {
-        q = query(
-          collection(db, 'pastQuestions'),
-          where('semester', '==', selectedSemester),
-          orderBy('createdAt', 'desc')
-        );
+      // If a specific semester is selected (not 0 = "All")
+      if (selectedSemester !== 0) {
+        query = query.eq('semester', selectedSemester);
       }
 
-      const querySnapshot = await getDocs(q);
-      const data = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setQuestions(data);
+      // Order by upload date
+      query = query.order('uploaded_at', { ascending: false });
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      setQuestions(data || []);
     } catch (error) {
       console.error('Error fetching questions:', error);
+      setQuestions([]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-cream pt-32 pb-24">
-      <div className="container-custom">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16 space-y-6"
-        >
-          <div className="accent-line mx-auto" />
-          <div className="flex items-center justify-center gap-3">
-            <BookOpen className="w-8 h-8 text-charcoal" />
-            <h1 className="heading-2">Past Questions</h1>
+    <div className="min-h-screen bg-gray-50 pt-32 pb-20">
+      <div className="container max-w-7xl">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 px-4 py-2 rounded-full text-sm font-medium mb-4 border border-teal-200">
+            <div className="w-2 h-2 bg-teal-600 rounded-full animate-pulse"></div>
+            Purbanchal University
           </div>
-          <p className="body-large text-slate-600">
-            Browse and download past question papers
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            BIT Past Questions
+          </h1>
+          <p className="text-gray-600">
+            {selectedSemester === 0 
+              ? `${questions.length} total past questions available`
+              : `${questions.length} questions for Semester ${selectedSemester}`
+            }
           </p>
-        </motion.div>
+        </div>
 
+        {/* Filter */}
         <SemesterFilter
           selectedSemester={selectedSemester}
           onSemesterChange={setSelectedSemester}
         />
 
+        {/* Content */}
         {loading ? (
-          <LoadingSpinner />
+          <div className="flex items-center justify-center py-20">
+            <LoadingSpinner />
+          </div>
         ) : questions.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {questions.map((question, index) => (
               <QuestionCard key={question.id} question={question} index={index} />
             ))}
           </div>
         ) : (
-          <div className="card p-12 text-center">
-            <p className="text-slate-600 text-lg">
-              No questions found for this semester yet.
+          <div className="card text-center py-12">
+            <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              No questions available yet
+            </h3>
+            <p className="text-gray-600">
+              {selectedSemester === 0
+                ? 'No questions have been uploaded yet. Check back later!'
+                : `Questions for Semester ${selectedSemester} will appear here once uploaded by admin.`
+              }
             </p>
           </div>
         )}

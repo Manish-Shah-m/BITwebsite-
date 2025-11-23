@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/firebase/config';
+import { supabase } from '@/lib/supabase/config';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/firebase/hooks';
+import { useAuth } from '@/lib/supabase/hooks';
 import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
 
@@ -28,12 +27,18 @@ export default function LoginPage() {
     setLoading(true);
     
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
       toast.success('Login successful!');
       router.push('/admin');
     } catch (error) {
       console.error('Login error:', error);
-      toast.error('Invalid email or password');
+      toast.error(error.message || 'Invalid email or password');
     } finally {
       setLoading(false);
     }

@@ -3,9 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useAuth } from '@/firebase/hooks';
-import { signOut } from 'firebase/auth';
-import { auth } from '@/firebase/config';
+import { useAuth } from '@/lib/supabase/hooks';
+import { supabase } from '@/lib/supabase/config';
 
 const NavLink = ({ href, children, onClick }) => {
   const pathname = usePathname();
@@ -42,7 +41,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      await supabase.auth.signOut();
       setIsMobileMenuOpen(false);
     } catch (error) {
       console.error('Error signing out:', error);
@@ -51,7 +50,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/semester/1', label: 'Semesters' },
+    { href: '/semester', label: 'Semesters' },
     { href: '/projects', label: 'Projects' },
     { href: '/important-topics', label: 'Topics' },
     { href: '/syllabus', label: 'Syllabus' },

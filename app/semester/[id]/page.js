@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '@/firebase/config';
+import { use, useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase/config';
 import QuestionCard from '@/components/QuestionCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ImportantTopics from '@/components/ImportantTopics';
 import { SUBJECTS, IMPORTANT_TOPICS } from '@/lib/utils';
 
 export default function SemesterPage({ params }) {
-  const semesterId = parseInt(params.id);
+  // Unwrap params using React.use()
+  const unwrappedParams = use(params);
+  const semesterId = parseInt(unwrappedParams.id);
+  
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSubject, setSelectedSubject] = useState('all');
@@ -22,18 +24,24 @@ export default function SemesterPage({ params }) {
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      const q = query(
-        collection(db, 'pastQuestions'),
-        where('semester', '==', semesterId)
-      );
-      const querySnapshot = await getDocs(q);
-      const questionsData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setQuestions(questionsData);
+      console.log('Fetching questions for semester:', semesterId); // Debug log
+      
+      const { data, error } = await supabase
+        .from('past_questions')
+        .select('*')
+        .eq('semester', semesterId)
+        .order('year', { ascending: false });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      console.log('Fetched questions:', data); // Debug log
+      setQuestions(data || []);
     } catch (error) {
       console.error('Error fetching questions:', error);
+      setQuestions([]);
     } finally {
       setLoading(false);
     }
