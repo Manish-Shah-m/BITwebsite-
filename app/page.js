@@ -32,7 +32,7 @@ export default function HomePage() {
             
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
-              <Link href="/semester/1" className="btn-primary text-lg">
+              <Link href="/semester#browse-by-semester" className="btn-primary text-lg">
                 Browse Questions
               </Link>
               
@@ -60,7 +60,7 @@ export default function HomePage() {
       </section>
 
       {/* Semesters Section */}
-      <section className="section bg-white">
+      <section id="browse-by-semester" className="section bg-white">
         <div className="container">
           <div className="section-header">
             <h2 className="section-title">Browse by Semester</h2>
@@ -130,7 +130,7 @@ export default function HomePage() {
                 title: 'Past Questions',
                 description: 'Access comprehensive collection of previous year question papers from Purbanchal University',
                 icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
-                link: '/semester/1',
+                link: '/semester#browse-by-semester',
               },
               {
                 title: 'Project Ideas',
@@ -360,7 +360,7 @@ export default function HomePage() {
           <p className="text-xl text-teal-100 mb-10 max-w-2xl mx-auto">
             Access hundreds of past questions and study materials
           </p>
-          <Link href="/semester/1" className="btn bg-white text-teal-600 hover:bg-gray-100 text-lg">
+          <Link href="/semester#browse-by-semester" className="btn bg-white text-teal-600 hover:bg-gray-100 text-lg">
             Browse Questions
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
