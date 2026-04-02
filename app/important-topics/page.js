@@ -35,7 +35,7 @@ export default function ImportantTopicsPage() {
 
         {/* Semester Selector */}
         <div className="flex gap-3 mb-12 overflow-x-auto pb-2">
-          {[1, 2, 3, 4].map((sem) => (
+          {[1, 2, 3, 4, 5].map((sem) => (
             <button
               key={sem}
               onClick={() => {
