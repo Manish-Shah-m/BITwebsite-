@@ -87,7 +87,7 @@ export default function QuestionCard({ question, index }) {
               alt={`${question.subject} - ${question.year}`}
               width={1200}
               height={1600}
-              className="w-auto h-auto object-contain rounded-lg"
+              className="w-auto h-[590px] object-contain rounded-lg"  // or h-auto 
             />
           </div>
         </div>
